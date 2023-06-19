@@ -1,8 +1,6 @@
 from django import forms
 from django.forms.widgets import DateInput, TextInput
-
 from .models import *
-
 
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -22,8 +20,6 @@ class CustomUserForm(FormSettings):
     widget = {
         'password': forms.PasswordInput(),
     }
-    profile_pic = forms.ImageField()
-
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
 
@@ -33,26 +29,25 @@ class CustomUserForm(FormSettings):
             for field in CustomUserForm.Meta.fields:
                 self.fields[field].initial = instance.get(field)
             if self.instance.pk is not None:
-                self.fields['password'].widget.attrs['placeholder'] = "Fill this only if you wish to update password"
+                self.fields['password'].widget.attrs['placeholder'] = "Заполните, только если хотите поменять пароль."
 
-    def clean_email(self, *args, **kwargs):
+    def clean_email(self):
         formEmail = self.cleaned_data['email'].lower()
         if self.instance.pk is None:  # Insert
             if CustomUser.objects.filter(email=formEmail).exists():
-                raise forms.ValidationError(
-                    "The given email is already registered")
-        else:  # Update
+                raise forms.ValidationError("Этот email уже был зарегистрирован")
+        else:
             dbEmail = self.Meta.model.objects.get(
                 id=self.instance.pk).admin.email.lower()
             if dbEmail != formEmail:  # There has been changes
                 if CustomUser.objects.filter(email=formEmail).exists():
-                    raise forms.ValidationError("The given email is already registered")
+                    raise forms.ValidationError("Этот email уже был зарегистрирован")
 
         return formEmail
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'gender',  'password','profile_pic', 'address' ]
+        fields = ['first_name', 'last_name', 'email', 'gender',  'password', 'address' ]
 
 
 class StudentForm(CustomUserForm):
@@ -81,7 +76,7 @@ class StaffForm(CustomUserForm):
     class Meta(CustomUserForm.Meta):
         model = Staff
         fields = CustomUserForm.Meta.fields + \
-            ['course' ]
+            ['course']
 
 
 class CourseForm(FormSettings):
@@ -114,30 +109,6 @@ class SessionForm(FormSettings):
             'start_year': DateInput(attrs={'type': 'date'}),
             'end_year': DateInput(attrs={'type': 'date'}),
         }
-
-
-
-
-class FeedbackStaffForm(FormSettings):
-
-    def __init__(self, *args, **kwargs):
-        super(FeedbackStaffForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = FeedbackStaff
-        fields = ['feedback']
-
-
-
-
-class FeedbackStudentForm(FormSettings):
-
-    def __init__(self, *args, **kwargs):
-        super(FeedbackStudentForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = FeedbackStudent
-        fields = ['feedback']
 
 
 class StudentEditForm(CustomUserForm):

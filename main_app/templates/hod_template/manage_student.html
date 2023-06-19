@@ -17,13 +17,12 @@
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>SN</th>
-                                    <th>Full Name</th>
+                                    <th>ID</th>
+                                    <th>ФИО</th>
                                     <th>Email</th>
-                                    <th>Gender</th>
-                                    <th>Course</th>
-                                    <th>Avatar</th>
-                                    <th>Edit</th>
+                                    <th>Пол</th>
+                                    <th>Курс</th>
+                                    <th>Редактировать</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,15 +33,7 @@
                                     <td>{{student.email}}</td>
                                     <td>{{student.gender}}</td>
                                     <td>{{student.student.course.name}}</td>
-                                    <td>
-                                        {% if student.profile_pic == ""  %}
-                                        No Image
-                                        {% else %}
-                                        <img class="img img-fluid mb-2" height="100" width="100"
-                                            src="{{student.profile_pic}}" alt="">
-                                        {% endif %}
-                                    </td>
-                                    
+
                                     <td><a href="{% url 'edit_student' student.student.id %}" class="btn btn-primary">Edit</a> -
                                         <a href="{% url 'delete_student' student.student.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
 
