@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +20,6 @@
     <!-- Google Recaptcha     -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
@@ -61,7 +59,6 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="g-recaptcha" data-sitekey="6LfswtgZAAAAAJ7bhwqZZtDpBsc75ekH6FWA4Fnt"></div>
-
                     </div>
                     <div class="row">
                         <div class="col-8">
@@ -77,20 +74,13 @@
                         </div>
                     </div>
                 </form>
-                <p class="mb-1">
-                    <a href="{% url 'password_reset' %}"> Забыли пароль?</a></a>
-                </p>
             </div>
         </div>
     </div>
     <!-- /.login-box -->
-
     <!-- jQuery -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-
 </body>
-
 </html>
