@@ -1,14 +1,11 @@
 import json
-import requests
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import (HttpResponse, HttpResponseRedirect,
+from django.http import JsonResponse
+from django.shortcuts import (HttpResponse,
                               get_object_or_404, redirect, render)
-from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import UpdateView
 
 from .forms import *
 from .models import *
@@ -29,7 +26,7 @@ def admin_home(request):
         subject_list.append(subject.name[:7])
         attendance_list.append(attendance_count)
     context = {
-        'page_title': "Administrative Dashboard",
+        'page_title': "Административная панель",
         'total_students': total_students,
         'total_staff': total_staff,
         'total_course': total_course,
@@ -48,29 +45,23 @@ def add_staff(request):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
             password = form.cleaned_data.get('password')
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic')
-            fs = FileSystemStorage()
-            filename = fs.save(passport.name, passport)
-            passport_url = fs.url(filename)
             try:
                 user = CustomUser.objects.create_user(
-                    email=email, password=password, user_type=2, first_name=first_name, last_name=last_name, profile_pic=passport_url)
+                    email=email, password=password, user_type=2, first_name=first_name, last_name=last_name)
                 user.gender = gender
-                user.address = address
                 user.staff.course = course
                 user.save()
-                messages.success(request, "Successfully Added")
+                messages.success(request, "Преподаватель успешно добавлен!")
                 return redirect(reverse('add_staff'))
 
             except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
+                messages.error(request, "Невозможно добавить " + str(e))
         else:
-            messages.error(request, "Please fulfil all requirements")
+            messages.error(request, "Заполните все обязательные поля.")
 
     return render(request, 'hod_template/add_staff_template.html', context)
 
@@ -82,30 +73,25 @@ def add_student(request):
         if student_form.is_valid():
             first_name = student_form.cleaned_data.get('first_name')
             last_name = student_form.cleaned_data.get('last_name')
-            address = student_form.cleaned_data.get('address')
             email = student_form.cleaned_data.get('email')
             gender = student_form.cleaned_data.get('gender')
             password = student_form.cleaned_data.get('password')
             course = student_form.cleaned_data.get('course')
             session = student_form.cleaned_data.get('session')
-            passport = request.FILES['profile_pic']
-            fs = FileSystemStorage()
-            filename = fs.save(passport.name, passport)
-            passport_url = fs.url(filename)
+
             try:
                 user = CustomUser.objects.create_user(
-                    email=email, password=password, user_type=3, first_name=first_name, last_name=last_name, profile_pic=passport_url)
+                    email=email, password=password, user_type=3, first_name=first_name, last_name=last_name)
                 user.gender = gender
-                user.address = address
                 user.student.session = session
                 user.student.course = course
                 user.save()
-                messages.success(request, "Successfully Added")
+                messages.success(request, "Ученик успешно добавлен!")
                 return redirect(reverse('add_student'))
             except Exception as e:
-                messages.error(request, "Could Not Add: " + str(e))
+                messages.error(request, "Не получается добавить: " + str(e))
         else:
-            messages.error(request, "Could Not Add: ")
+            messages.error(request, "Не получается добавить ")
     return render(request, 'hod_template/add_student_template.html', context)
 
 
@@ -424,24 +410,6 @@ def student_feedback_message(request):
 
 
 @csrf_exempt
-def staff_feedback_message(request):
-    if request.method != 'POST':
-        feedbacks = FeedbackStaff.objects.all()
-        context = {
-            'feedbacks': feedbacks,
-            'page_title': 'Staff Feedback Messages'
-        }
-        return render(request, 'hod_template/staff_feedback_template.html', context)
-    else:
-        feedback_id = request.POST.get('id')
-        try:
-            feedback = get_object_or_404(FeedbackStaff, id=feedback_id)
-            reply = request.POST.get('reply')
-            feedback.reply = reply
-            feedback.save()
-            return HttpResponse(True)
-        except Exception as e:
-            return HttpResponse(False)
 
 
 @csrf_exempt
@@ -500,111 +468,38 @@ def admin_view_profile(request):
                 first_name = form.cleaned_data.get('first_name')
                 last_name = form.cleaned_data.get('last_name')
                 password = form.cleaned_data.get('password') or None
-                passport = request.FILES.get('profile_pic') or None
                 custom_user = admin.admin
                 if password != None:
                     custom_user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    custom_user.profile_pic = passport_url
                 custom_user.first_name = first_name
                 custom_user.last_name = last_name
                 custom_user.save()
-                messages.success(request, "Profile Updated!")
+                messages.success(request, "Профиль обновлен!")
                 return redirect(reverse('admin_view_profile'))
             else:
-                messages.error(request, "Invalid Data Provided")
+                messages.error(request, "Ошибка")
         except Exception as e:
             messages.error(
-                request, "Error Occured While Updating Profile " + str(e))
+                request, "Произошла ошибка " + str(e))
     return render(request, "hod_template/admin_view_profile.html", context)
 
 
-def admin_notify_staff(request):
-    staff = CustomUser.objects.filter(user_type=2)
-    context = {
-        'page_title': "Send Notifications To Staff",
-        'allStaff': staff
-    }
-    return render(request, "hod_template/staff_notification.html", context)
-
-
-def admin_notify_student(request):
-    student = CustomUser.objects.filter(user_type=3)
-    context = {
-        'page_title': "Send Notifications To Students",
-        'students': student
-    }
-    return render(request, "hod_template/student_notification.html", context)
-
+@csrf_exempt
 
 @csrf_exempt
-def send_student_notification(request):
-    id = request.POST.get('id')
-    message = request.POST.get('message')
-    student = get_object_or_404(Student, admin_id=id)
-    try:
-        url = "https://fcm.googleapis.com/fcm/send"
-        body = {
-            'notification': {
-                'title': "Student Management System",
-                'body': message,
-                'click_action': reverse('student_view_notification'),
-                'icon': static('dist/img/AdminLTELogo.png')
-            },
-            'to': student.admin.fcm_token
-        }
-        headers = {'Authorization':
-                   'key=AAAA3Bm8j_M:APA91bElZlOLetwV696SoEtgzpJr2qbxBfxVBfDWFiopBWzfCfzQp2nRyC7_A2mlukZEHV4g1AmyC6P_HonvSkY2YyliKt5tT3fe_1lrKod2Daigzhb2xnYQMxUWjCAIQcUexAMPZePB',
-                   'Content-Type': 'application/json'}
-        data = requests.post(url, data=json.dumps(body), headers=headers)
-        notification = NotificationStudent(student=student, message=message)
-        notification.save()
-        return HttpResponse("True")
-    except Exception as e:
-        return HttpResponse("False")
-
-
-@csrf_exempt
-def send_staff_notification(request):
-    id = request.POST.get('id')
-    message = request.POST.get('message')
-    staff = get_object_or_404(Staff, admin_id=id)
-    try:
-        url = "https://fcm.googleapis.com/fcm/send"
-        body = {
-            'notification': {
-                'title': "Student Management System",
-                'body': message,
-                'click_action': reverse('staff_view_notification'),
-                'icon': static('dist/img/AdminLTELogo.png')
-            },
-            'to': staff.admin.fcm_token
-        }
-        headers = {'Authorization':
-                   'key=AAAA3Bm8j_M:APA91bElZlOLetwV696SoEtgzpJr2qbxBfxVBfDWFiopBWzfCfzQp2nRyC7_A2mlukZEHV4g1AmyC6P_HonvSkY2YyliKt5tT3fe_1lrKod2Daigzhb2xnYQMxUWjCAIQcUexAMPZePB',
-                   'Content-Type': 'application/json'}
-        data = requests.post(url, data=json.dumps(body), headers=headers)
-        notification = NotificationStaff(staff=staff, message=message)
-        notification.save()
-        return HttpResponse("True")
-    except Exception as e:
-        return HttpResponse("False")
 
 
 def delete_staff(request, staff_id):
     staff = get_object_or_404(CustomUser, staff__id=staff_id)
     staff.delete()
-    messages.success(request, "Staff deleted successfully!")
+    messages.success(request, "Преподаватель успешно удален")
     return redirect(reverse('manage_staff'))
 
 
 def delete_student(request, student_id):
     student = get_object_or_404(CustomUser, student__id=student_id)
     student.delete()
-    messages.success(request, "Student deleted successfully!")
+    messages.success(request, "Студент успешно удален")
     return redirect(reverse('manage_student'))
 
 
@@ -612,17 +507,17 @@ def delete_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     try:
         course.delete()
-        messages.success(request, "Course deleted successfully!")
+        messages.success(request, "Курс успешно удален!")
     except Exception:
         messages.error(
-            request, "Sorry, some students are assigned to this course already. Kindly change the affected student course and try again")
+            request, "Нельзя удалить курс, на котором есть студенты")
     return redirect(reverse('manage_course'))
 
 
 def delete_subject(request, subject_id):
     subject = get_object_or_404(Subject, id=subject_id)
     subject.delete()
-    messages.success(request, "Subject deleted successfully!")
+    messages.success(request, "Предмет успешно удален!")
     return redirect(reverse('manage_subject'))
 
 
@@ -630,7 +525,7 @@ def delete_session(request, session_id):
     session = get_object_or_404(Session, id=session_id)
     try:
         session.delete()
-        messages.success(request, "Session deleted successfully!")
+        messages.success(request, "Успешно удалено!")
     except Exception:
         messages.error(
             request, "There are students assigned to this session. Please move them to another session.")
