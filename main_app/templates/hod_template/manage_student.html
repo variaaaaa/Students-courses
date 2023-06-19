@@ -3,7 +3,6 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -12,7 +11,6 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
@@ -33,10 +31,8 @@
                                     <td>{{student.email}}</td>
                                     <td>{{student.gender}}</td>
                                     <td>{{student.student.course.name}}</td>
-
-                                    <td><a href="{% url 'edit_student' student.student.id %}" class="btn btn-primary">Edit</a> -
-                                        <a href="{% url 'delete_student' student.student.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
-
+                                    <td><a href="{% url 'edit_student' student.student.id %}" class="btn btn-primary">Редактировать</a>
+                                        <a href="{% url 'delete_student' student.student.id %}" class="btn btn-danger" onclick="return confirm('Удалить этого ученика?')">Удалить</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

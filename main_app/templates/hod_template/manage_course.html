@@ -3,7 +3,6 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -12,14 +11,13 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>SN</th>
-                                    <th>Course Name</th>
-                                    <th>Edit</th>
+                                    <th>ID</th>
+                                    <th>Название курса</th>
+                                    <th>Редактировать</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -28,8 +26,8 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{course.name}}</td>
                                     <td>
-                                        <a href="{% url 'edit_course' course.id %}" class="btn btn-primary">Edit</a> -
-                                        <a href="{% url 'delete_course' course.id %}" onclick="return confirm('Are you sure you want to delete this course ?')" class="btn btn-danger">Delete</a> 
+                                        <a href="{% url 'edit_course' course.id %}" class="btn btn-primary">Редактировать</a>
+                                        <a href="{% url 'delete_course' course.id %}" onclick="return confirm('Удалить этот курс?')" class="btn btn-danger">Удалить</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import *
 from .models import *
 
-
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
     total_students = Student.objects.filter(course=staff.course).count()
