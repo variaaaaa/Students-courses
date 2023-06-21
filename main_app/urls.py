@@ -14,9 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-
-
-
 from . import hod_views, staff_views, student_views, views
 
 urlpatterns = [
@@ -47,16 +44,12 @@ urlpatterns = [
     path("staff/edit/<int:staff_id>", hod_views.edit_staff, name='edit_staff'),
     path("staff/delete/<int:staff_id>",
          hod_views.delete_staff, name='delete_staff'),
-
     path("course/delete/<int:course_id>",
          hod_views.delete_course, name='delete_course'),
-
     path("subject/delete/<int:subject_id>",
          hod_views.delete_subject, name='delete_subject'),
-
     path("session/delete/<int:session_id>",
          hod_views.delete_session, name='delete_session'),
-
     path("student/delete/<int:student_id>",
          hod_views.delete_student, name='delete_student'),
     path("student/edit/<int:student_id>",
@@ -65,7 +58,6 @@ urlpatterns = [
          hod_views.edit_course, name='edit_course'),
     path("subject/edit/<int:subject_id>",
          hod_views.edit_subject, name='edit_subject'),
-
 
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
@@ -88,9 +80,6 @@ urlpatterns = [
     path("staff/fcmtoken/", staff_views.staff_fcmtoken, name='staff_fcmtoken'),
     path("staff/view/notification/", staff_views.staff_view_notification,
          name="staff_view_notification"),
-
-
-
     # Student
     path("student/home/", student_views.student_home, name='student_home'),
     path("student/view/attendance/", student_views.student_view_attendance,
@@ -103,6 +92,4 @@ urlpatterns = [
          name='student_view_profile'),
     path("student/fcmtoken/", student_views.student_fcmtoken,
          name='student_fcmtoken'),
-
-
 ]
