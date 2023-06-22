@@ -29,8 +29,8 @@ class CustomUserManager(UserManager):
 
 
 class Session(models.Model):
-    start_year = models.DateField()
-    end_year = models.DateField()
+    start_year = models.DateField(verbose_name='Начало курса')
+    end_year = models.DateField(verbose_name='Конец курса')
 
     def __str__(self):
         return "From " + str(self.start_year) + " to " + str(self.end_year)
@@ -38,13 +38,13 @@ class Session(models.Model):
 
 class CustomUser(AbstractUser):
     USER_TYPE = ((1, "HOD"), (2, "Staff"), (3, "Student"))
-    GENDER = [("M", "Male"), ("F", "Female")]
+    GENDER = [("M", "Мужской"), ("Ж", "Женский")]
 
     username = None
-    email = models.EmailField(unique=True)
+
+    email = models.EmailField(unique=True, verbose_name='Почта')
     user_type = models.CharField(default=1, choices=USER_TYPE, max_length=1)
-    gender = models.CharField(max_length=1, choices=GENDER)
-    address = models.TextField()
+    gender = models.CharField(max_length=1,  verbose_name="Пол", choices=GENDER)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = "email"
@@ -60,7 +60,7 @@ class Admin(models.Model):
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=120, verbose_name='Название')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -70,8 +70,8 @@ class Course(models.Model):
 
 class Student(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False)
-    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, null=True)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False, verbose_name='Курс')
+    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, null=True, verbose_name='Длительность курса')
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
@@ -87,38 +87,14 @@ class Staff(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=120)
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, verbose_name='Преподаватель')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Предмет')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
-
-class Attendance(models.Model):
-    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
-    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
-    date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-class AttendanceReport(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
-    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-class StudentResult(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    test = models.FloatField(default=0)
-    exam = models.FloatField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
 @receiver(post_save, sender=CustomUser)

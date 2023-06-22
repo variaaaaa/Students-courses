@@ -12,14 +12,13 @@ def admin_home(request):
     subjects = Subject.objects.all()
     total_subject = subjects.count()
     total_course = Course.objects.all().count()
-    attendance_list = Attendance.objects.filter(subject__in=subjects)
-    total_attendance = attendance_list.count()
+
     attendance_list = []
     subject_list = []
     for subject in subjects:
-        attendance_count = Attendance.objects.filter(subject=subject).count()
+
         subject_list.append(subject.name[:7])
-        attendance_list.append(attendance_count)
+
     context = {
         'page_title': "Административная панель",
         'total_students': total_students,
@@ -27,7 +26,7 @@ def admin_home(request):
         'total_course': total_course,
         'total_subject': total_subject,
         'subject_list': subject_list,
-        'attendance_list': attendance_list
+
 
     }
     return render(request, 'hod_template/home_content.html', context)

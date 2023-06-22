@@ -18,6 +18,10 @@ class CustomUserForm(FormSettings):
     widget = {
         'password': forms.PasswordInput(),
     }
+    labels = {
+        'first_name': 'имя',
+        'password': 'пароль'
+    }
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
 
