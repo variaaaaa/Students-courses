@@ -1,6 +1,8 @@
 from django import forms
 from django.forms.widgets import DateInput
+
 from .models import *
+
 
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):

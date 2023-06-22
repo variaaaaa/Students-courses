@@ -1,10 +1,13 @@
 import json
+
 import requests
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.shortcuts import redirect, render, reverse
+
 from .EmailBackend import EmailBackend
+
 
 # Create your views here.
 
