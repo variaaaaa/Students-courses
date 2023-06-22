@@ -54,7 +54,6 @@ urlpatterns = [
          hod_views.edit_course, name='edit_course'),
     path("subject/edit/<int:subject_id>",
          hod_views.edit_subject, name='edit_subject'),
-
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
     path("staff/view/profile/", staff_views.staff_view_profile,
@@ -62,8 +61,6 @@ urlpatterns = [
     path("staff/get_students/", staff_views.get_students, name='get_students'),
     # Student
     path("student/home/", student_views.student_home, name='student_home'),
-    path("student/view/attendance/", student_views.student_view_attendance,
-         name='student_view_attendance'),
     path("student/view/profile/", student_views.student_view_profile,
          name='student_view_profile'),
 ]

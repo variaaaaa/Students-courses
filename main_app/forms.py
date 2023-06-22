@@ -14,7 +14,6 @@ class CustomUserForm(FormSettings):
     gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')])
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
-    address = forms.CharField(widget=forms.Textarea)
     password = forms.CharField(widget=forms.PasswordInput)
     widget = {
         'password': forms.PasswordInput(),
@@ -45,7 +44,8 @@ class CustomUserForm(FormSettings):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'gender',  'password']
+        fields = ['first_name', 'last_name', 'email', 'gender', 'password']
+
 
 
 class StudentForm(CustomUserForm):

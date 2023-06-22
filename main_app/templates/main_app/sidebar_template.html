@@ -34,7 +34,7 @@
                     <a href="{{manage_staff}}"
                         class="nav-link {% if manage_staff == request.path or request.path == edit_staff %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Управление </p>
+                        <p>Преподаватели </p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -50,14 +50,14 @@
                     <a href="{{manage_student}}"
                         class="nav-link  {% if edit_student == request.path or manage_student == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Управление учеником </p>
+                        <p>Ученики </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     {% url 'add_course' as add_course %}
                     <a href="{{add_course}}" class="nav-link  {% if add_course == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Добавить курс222</p>
+                        <p>Добавить предмет</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -66,7 +66,7 @@
                     <a href="{{manage_course}}"
                         class="nav-link  {% if edit_course == request.path or manage_course == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p> Управление курсами </p>
+                        <p> Предметы </p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -82,7 +82,7 @@
                     <a href="{{manage_subject}}"
                         class="nav-link  {% if edit_subject == request.path or manage_subject == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Управление курсами</p>
+                        <p>Курсы</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -98,7 +98,7 @@
                 <a href="{{manage_session}}"
                     class="nav-link  {% if edit_session == request.path or manage_session == request.path %} active {% endif %}">
                     <i class="nav-icon fas fa-th"></i>
-                    <p>Управление датами</p>
+                    <p>Длительность курсов</p>
                 </a>
         </li>
 {% elif request.user.user_type == '2' %}
@@ -113,7 +113,7 @@
                     <a href="{{staff_home}}" class="nav-link {% if staff_home == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
-                            На главную
+                            Главная
                         </p>
                     </a>
                 </li>
@@ -146,7 +146,7 @@
                     {% url 'student_view_profile' as student_view_profile %}
                     <a href="{{student_view_profile}}" class="nav-link {% if student_view_profile == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Редактировать профиль</p>
+                        <p>Профиль</p>
                     </a>
                 </li>
 {% endif %}
