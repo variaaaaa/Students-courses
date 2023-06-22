@@ -261,7 +261,6 @@ def edit_student(request, student_id):
     else:
         return render(request, "hod_template/edit_student_template.html", context)
 
-
 def edit_course(request, course_id):
     instance = get_object_or_404(Course, id=course_id)
     form = CourseForm(request.POST or None, instance=instance)
