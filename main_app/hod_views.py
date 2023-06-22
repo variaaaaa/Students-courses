@@ -1,12 +1,7 @@
-import json
 from django.contrib import messages
-from django.core.files.storage import FileSystemStorage
-from django.http import JsonResponse
-from django.shortcuts import (HttpResponse,
-                              get_object_or_404, redirect, render)
+from django.shortcuts import (HttpResponse, get_object_or_404, redirect, render)
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
 from .forms import *
 from .models import *
 
@@ -39,8 +34,8 @@ def admin_home(request):
 
 
 def add_staff(request):
-    form = StaffForm(request.POST or None, request.FILES or None)
-    context = {'form': form, 'page_title': 'Add Staff'}
+    form = StaffForm(request.POST or None)
+    context = {'form': form, 'page_title': 'Добавить преподавателя'}
     if request.method == 'POST':
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
@@ -68,7 +63,7 @@ def add_staff(request):
 
 def add_student(request):
     student_form = StudentForm(request.POST or None, request.FILES or None)
-    context = {'form': student_form, 'page_title': 'Add Student'}
+    context = {'form': student_form, 'page_title': 'Добавить ученика'}
     if request.method == 'POST':
         if student_form.is_valid():
             first_name = student_form.cleaned_data.get('first_name')
@@ -99,7 +94,7 @@ def add_course(request):
     form = CourseForm(request.POST or None)
     context = {
         'form': form,
-        'page_title': 'Add Course'
+        'page_title': 'Добавить курс'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -108,12 +103,12 @@ def add_course(request):
                 course = Course()
                 course.name = name
                 course.save()
-                messages.success(request, "Successfully Added")
+                messages.success(request, "Добавлен успешно!")
                 return redirect(reverse('add_course'))
             except:
-                messages.error(request, "Could Not Add")
+                messages.error(request, "Невозможно добавить.")
         else:
-            messages.error(request, "Could Not Add")
+            messages.error(request, "Невозможно добавить.")
     return render(request, 'hod_template/add_course_template.html', context)
 
 
@@ -121,7 +116,7 @@ def add_subject(request):
     form = SubjectForm(request.POST or None)
     context = {
         'form': form,
-        'page_title': 'Add Subject'
+        'page_title': 'Добавить предмет'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -134,13 +129,13 @@ def add_subject(request):
                 subject.staff = staff
                 subject.course = course
                 subject.save()
-                messages.success(request, "Successfully Added")
+                messages.success(request, "Успешно добавлено!")
                 return redirect(reverse('add_subject'))
 
             except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
+                messages.error(request, "Не удалось добавить " + str(e))
         else:
-            messages.error(request, "Fill Form Properly")
+            messages.error(request, "Заполните поля корректно.")
 
     return render(request, 'hod_template/add_subject_template.html', context)
 
@@ -149,7 +144,7 @@ def manage_staff(request):
     allStaff = CustomUser.objects.filter(user_type=2)
     context = {
         'allStaff': allStaff,
-        'page_title': 'Manage Staff'
+        'page_title': 'Преподаватели'
     }
     return render(request, "hod_template/manage_staff.html", context)
 
@@ -158,7 +153,7 @@ def manage_student(request):
     students = CustomUser.objects.filter(user_type=3)
     context = {
         'students': students,
-        'page_title': 'Manage Students'
+        'page_title': 'Ученики'
     }
     return render(request, "hod_template/manage_student.html", context)
 
@@ -167,7 +162,7 @@ def manage_course(request):
     courses = Course.objects.all()
     context = {
         'courses': courses,
-        'page_title': 'Manage Courses'
+        'page_title': 'Курсы'
     }
     return render(request, "hod_template/manage_course.html", context)
 
@@ -176,7 +171,7 @@ def manage_subject(request):
     subjects = Subject.objects.all()
     context = {
         'subjects': subjects,
-        'page_title': 'Manage Subjects'
+        'page_title': 'Предметы'
     }
     return render(request, "hod_template/manage_subject.html", context)
 
@@ -199,18 +194,12 @@ def edit_staff(request, staff_id):
             gender = form.cleaned_data.get('gender')
             password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
                 user.email = email
                 if password != None:
                     user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
                 user.gender = gender
@@ -218,12 +207,12 @@ def edit_staff(request, staff_id):
                 staff.course = course
                 user.save()
                 staff.save()
-                messages.success(request, "Successfully Updated")
+                messages.success(request, "Успешно!")
                 return redirect(reverse('edit_staff', args=[staff_id]))
             except Exception as e:
-                messages.error(request, "Could Not Update " + str(e))
+                messages.error(request, "Произошла ошибка " + str(e))
         else:
-            messages.error(request, "Please fil form properly")
+            messages.error(request, "Заполните поля корректно.")
     else:
         user = CustomUser.objects.get(id=staff_id)
         staff = Staff.objects.get(id=user.id)
@@ -236,7 +225,7 @@ def edit_student(request, student_id):
     context = {
         'form': form,
         'student_id': student_id,
-        'page_title': 'Edit Student'
+        'page_title': 'Редактировать'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -249,14 +238,8 @@ def edit_student(request, student_id):
             password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
             session = form.cleaned_data.get('session')
-            passport = request.FILES.get('profile_pic') or None
             try:
                 user = CustomUser.objects.get(id=student.admin.id)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.username = username
                 user.email = email
                 if password != None:
@@ -269,12 +252,12 @@ def edit_student(request, student_id):
                 student.course = course
                 user.save()
                 student.save()
-                messages.success(request, "Successfully Updated")
+                messages.success(request, "Успешно!")
                 return redirect(reverse('edit_student', args=[student_id]))
             except Exception as e:
-                messages.error(request, "Could Not Update " + str(e))
+                messages.error(request, "Произошла ошибка " + str(e))
         else:
-            messages.error(request, "Please Fill Form Properly!")
+            messages.error(request, "Заполните поля корректно.")
     else:
         return render(request, "hod_template/edit_student_template.html", context)
 
@@ -285,7 +268,7 @@ def edit_course(request, course_id):
     context = {
         'form': form,
         'course_id': course_id,
-        'page_title': 'Edit Course'
+        'page_title': 'Редактировать курсы'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -294,11 +277,11 @@ def edit_course(request, course_id):
                 course = Course.objects.get(id=course_id)
                 course.name = name
                 course.save()
-                messages.success(request, "Successfully Updated")
+                messages.success(request, "Успешно!")
             except:
-                messages.error(request, "Could Not Update")
+                messages.error(request, "Произошла ошибка")
         else:
-            messages.error(request, "Could Not Update")
+            messages.error(request, "Произошла ошибка")
 
     return render(request, 'hod_template/edit_course_template.html', context)
 
@@ -309,7 +292,7 @@ def edit_subject(request, subject_id):
     context = {
         'form': form,
         'subject_id': subject_id,
-        'page_title': 'Edit Subject'
+        'page_title': 'Редактировать предмет'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -322,10 +305,10 @@ def edit_subject(request, subject_id):
                 subject.staff = staff
                 subject.course = course
                 subject.save()
-                messages.success(request, "Successfully Updated")
+                messages.success(request, "Успешно!")
                 return redirect(reverse('edit_subject', args=[subject_id]))
             except Exception as e:
-                messages.error(request, "Could Not Add " + str(e))
+                messages.error(request, "Невозможно добавить " + str(e))
         else:
             messages.error(request, "Fill Form Properly")
     return render(request, 'hod_template/edit_subject_template.html', context)
@@ -333,23 +316,23 @@ def edit_subject(request, subject_id):
 
 def add_session(request):
     form = SessionForm(request.POST or None)
-    context = {'form': form, 'page_title': 'Add Session'}
+    context = {'form': form, 'page_title': 'Добавить дату'}
     if request.method == 'POST':
         if form.is_valid():
             try:
                 form.save()
-                messages.success(request, "Session Created")
+                messages.success(request, "Успешно!")
                 return redirect(reverse('add_session'))
             except Exception as e:
-                messages.error(request, 'Could Not Add ' + str(e))
+                messages.error(request, 'Невозможно добавить ' + str(e))
         else:
-            messages.error(request, 'Fill Form Properly ')
+            messages.error(request, 'Заполните поля корректно.')
     return render(request, "hod_template/add_session_template.html", context)
 
 
 def manage_session(request):
     sessions = Session.objects.all()
-    context = {'sessions': sessions, 'page_title': 'Manage Sessions'}
+    context = {'sessions': sessions, 'page_title': 'Редактировать даты'}
     return render(request, "hod_template/manage_session.html", context)
 
 
@@ -357,19 +340,19 @@ def edit_session(request, session_id):
     instance = get_object_or_404(Session, id=session_id)
     form = SessionForm(request.POST or None, instance=instance)
     context = {'form': form, 'session_id': session_id,
-               'page_title': 'Edit Session'}
+               'page_title': 'Редактировать даты'}
     if request.method == 'POST':
         if form.is_valid():
             try:
                 form.save()
-                messages.success(request, "Session Updated")
+                messages.success(request, "Успешно!")
                 return redirect(reverse('edit_session', args=[session_id]))
             except Exception as e:
                 messages.error(
-                    request, "Session Could Not Be Updated " + str(e))
+                    request, "Невозможно изменить дату " + str(e))
                 return render(request, "hod_template/edit_session_template.html", context)
         else:
-            messages.error(request, "Invalid Form Submitted ")
+            messages.error(request, "Заполните форму корректно.")
             return render(request, "hod_template/edit_session_template.html", context)
 
     else:
@@ -389,78 +372,13 @@ def check_email_availability(request):
 
 
 @csrf_exempt
-def student_feedback_message(request):
-    if request.method != 'POST':
-        feedbacks = FeedbackStudent.objects.all()
-        context = {
-            'feedbacks': feedbacks,
-            'page_title': 'Student Feedback Messages'
-        }
-        return render(request, 'hod_template/student_feedback_template.html', context)
-    else:
-        feedback_id = request.POST.get('id')
-        try:
-            feedback = get_object_or_404(FeedbackStudent, id=feedback_id)
-            reply = request.POST.get('reply')
-            feedback.reply = reply
-            feedback.save()
-            return HttpResponse(True)
-        except Exception as e:
-            return HttpResponse(False)
-
-
-@csrf_exempt
-
-
-@csrf_exempt
-
-
-@csrf_exempt
-
-
-
-def admin_view_attendance(request):
-    subjects = Subject.objects.all()
-    sessions = Session.objects.all()
-    context = {
-        'subjects': subjects,
-        'sessions': sessions,
-        'page_title': 'View Attendance'
-    }
-
-    return render(request, "hod_template/admin_view_attendance.html", context)
-
-
-@csrf_exempt
-def get_admin_attendance(request):
-    subject_id = request.POST.get('subject')
-    session_id = request.POST.get('session')
-    attendance_date_id = request.POST.get('attendance_date_id')
-    try:
-        subject = get_object_or_404(Subject, id=subject_id)
-        session = get_object_or_404(Session, id=session_id)
-        attendance = get_object_or_404(
-            Attendance, id=attendance_date_id, session=session)
-        attendance_reports = AttendanceReport.objects.filter(
-            attendance=attendance)
-        json_data = []
-        for report in attendance_reports:
-            data = {
-                "status":  str(report.status),
-                "name": str(report.student)
-            }
-            json_data.append(data)
-        return JsonResponse(json.dumps(json_data), safe=False)
-    except Exception as e:
-        return None
-
 
 def admin_view_profile(request):
     admin = get_object_or_404(Admin, admin=request.user)
     form = AdminForm(request.POST or None, request.FILES or None,
                      instance=admin)
     context = {'form': form,
-               'page_title': 'View/Edit Profile'
+               'page_title': 'Профиль'
                }
     if request.method == 'POST':
         try:
@@ -485,10 +403,6 @@ def admin_view_profile(request):
 
 
 @csrf_exempt
-
-@csrf_exempt
-
-
 def delete_staff(request, staff_id):
     staff = get_object_or_404(CustomUser, staff__id=staff_id)
     staff.delete()
@@ -499,7 +413,7 @@ def delete_staff(request, staff_id):
 def delete_student(request, student_id):
     student = get_object_or_404(CustomUser, student__id=student_id)
     student.delete()
-    messages.success(request, "Студент успешно удален")
+    messages.success(request, "Ученик успешно удален")
     return redirect(reverse('manage_student'))
 
 
@@ -528,5 +442,5 @@ def delete_session(request, session_id):
         messages.success(request, "Успешно удалено!")
     except Exception:
         messages.error(
-            request, "There are students assigned to this session. Please move them to another session.")
+            request, "TНельзя удалить дату, на которую записаны студенты.")
     return redirect(reverse('manage_session'))

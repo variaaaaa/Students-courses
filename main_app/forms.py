@@ -1,11 +1,10 @@
 from django import forms
-from django.forms.widgets import DateInput, TextInput
+from django.forms.widgets import DateInput
 from .models import *
 
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FormSettings, self).__init__(*args, **kwargs)
-        # Here make some changes such as:
         for field in self.visible_fields():
             field.field.widget.attrs['class'] = 'form-control'
 
@@ -33,20 +32,20 @@ class CustomUserForm(FormSettings):
 
     def clean_email(self):
         formEmail = self.cleaned_data['email'].lower()
-        if self.instance.pk is None:  # Insert
+        if self.instance.pk is None:
             if CustomUser.objects.filter(email=formEmail).exists():
                 raise forms.ValidationError("Этот email уже был зарегистрирован")
         else:
             dbEmail = self.Meta.model.objects.get(
                 id=self.instance.pk).admin.email.lower()
-            if dbEmail != formEmail:  # There has been changes
+            if dbEmail != formEmail:
                 if CustomUser.objects.filter(email=formEmail).exists():
                     raise forms.ValidationError("Этот email уже был зарегистрирован")
         return formEmail
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'gender',  'password', 'address' ]
+        fields = ['first_name', 'last_name', 'email', 'gender',  'password']
 
 
 class StudentForm(CustomUserForm):
@@ -55,8 +54,7 @@ class StudentForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + \
-            ['course', 'session']
+        fields = CustomUserForm.Meta.fields + ['course', 'session']
 
 
 class AdminForm(CustomUserForm):
@@ -74,21 +72,18 @@ class StaffForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Staff
-        fields = CustomUserForm.Meta.fields + \
-            ['course']
+        fields = CustomUserForm.Meta.fields + ['course']
 
 
 class CourseForm(FormSettings):
     def __init__(self, *args, **kwargs):
         super(CourseForm, self).__init__(*args, **kwargs)
-
     class Meta:
         fields = ['name']
         model = Course
 
 
 class SubjectForm(FormSettings):
-
     def __init__(self, *args, **kwargs):
         super(SubjectForm, self).__init__(*args, **kwargs)
 
@@ -109,7 +104,6 @@ class SessionForm(FormSettings):
             'end_year': DateInput(attrs={'type': 'date'}),
         }
 
-
 class StudentEditForm(CustomUserForm):
     def __init__(self, *args, **kwargs):
         super(StudentEditForm, self).__init__(*args, **kwargs)
@@ -126,16 +120,3 @@ class StaffEditForm(CustomUserForm):
     class Meta(CustomUserForm.Meta):
         model = Staff
         fields = CustomUserForm.Meta.fields
-
-
-class EditResultForm(FormSettings):
-    session_list = Session.objects.all()
-    session_year = forms.ModelChoiceField(
-        label="Session Year", queryset=session_list, required=True)
-
-    def __init__(self, *args, **kwargs):
-        super(EditResultForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = StudentResult
-        fields = ['session_year', 'subject', 'student', 'test', 'exam']

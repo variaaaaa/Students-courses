@@ -58,13 +58,10 @@ def doLogin(request, **kwargs):
             messages.error(request, "Invalid details")
             return redirect("/")
 
-
-
 def logout_user(request):
     if request.user != None:
         logout(request)
     return redirect("/")
-
 
 @csrf_exempt
 def get_attendance(request):
@@ -85,8 +82,3 @@ def get_attendance(request):
         return JsonResponse(json.dumps(attendance_list), safe=False)
     except Exception as e:
         return None
-
-
-def showFirebaseJS(request):
-    data = ""
-    return HttpResponse(data, content_type='application/javascript')
