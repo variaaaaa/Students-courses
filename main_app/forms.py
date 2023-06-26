@@ -125,3 +125,15 @@ class StaffEditForm(CustomUserForm):
     class Meta(CustomUserForm.Meta):
         model = Staff
         fields = CustomUserForm.Meta.fields
+
+class EditResultForm(FormSettings):
+    session_list = Session.objects.all()
+    session_year = forms.ModelChoiceField(
+        label="Даты", queryset=session_list, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(EditResultForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = StudentResult
+        fields = ['session_year', 'subject', 'student', 'exam']

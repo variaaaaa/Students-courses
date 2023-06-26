@@ -39,12 +39,13 @@ class Session(models.Model):
 class CustomUser(AbstractUser):
     USER_TYPE = ((1, "HOD"), (2, "Staff"), (3, "Student"))
     GENDER = [("M", "Мужской"), ("Ж", "Женский")]
-
     username = None
-
+    first_name = models.CharField(max_length=25, verbose_name='Имя', null=True)
+    second_name=models.CharField( max_length=25, verbose_name='Фамилия', null=True)
     email = models.EmailField(unique=True, verbose_name='Почта')
     user_type = models.CharField(default=1, choices=USER_TYPE, max_length=1)
     gender = models.CharField(max_length=1,  verbose_name="Пол", choices=GENDER)
+    profile_pic = models.ImageField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = "email"
@@ -52,7 +53,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.last_name + ", " + self.first_name
+        return self.last_name + " " + self.first_name
 
 
 class Admin(models.Model):
@@ -78,7 +79,7 @@ class Student(models.Model):
 
 
 class Staff(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, verbose_name='Курс')
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -86,7 +87,7 @@ class Staff(models.Model):
 
 
 class Subject(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=120, verbose_name='Название')
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, verbose_name='Преподаватель')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Предмет')
     updated_at = models.DateTimeField(auto_now=True)
@@ -96,6 +97,26 @@ class Subject(models.Model):
         return self.name
 
 
+class Attendance(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, verbose_name='Дата')
+    subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING, verbose_name='Предмет')
+    date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class AttendanceReport(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING, verbose_name='Ученик')
+    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE, verbose_name='Дата')
+    status = models.BooleanField(default=False, verbose_name='Посещение')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class StudentResult(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Ученик')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, verbose_name='Предмет')
+    exam = models.FloatField(default=0,  verbose_name='Экзамен')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):

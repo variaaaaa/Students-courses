@@ -1,11 +1,17 @@
+import json
+import requests
 from django.contrib import messages
-from django.shortcuts import (HttpResponse, get_object_or_404, redirect, render)
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import (HttpResponse, HttpResponseRedirect,
+                              get_object_or_404, redirect, render)
+from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import UpdateView
 
 from .forms import *
 from .models import *
-
 
 def admin_home(request):
     total_staff = Staff.objects.all().count()
@@ -182,7 +188,7 @@ def edit_staff(request, staff_id):
     context = {
         'form': form,
         'staff_id': staff_id,
-        'page_title': 'Edit Staff'
+        'page_title': 'Преподаватели'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -225,7 +231,7 @@ def edit_student(request, student_id):
     context = {
         'form': form,
         'student_id': student_id,
-        'page_title': 'Редактировать'
+        'page_title': 'Ученики'
     }
     if request.method == 'POST':
         if form.is_valid():
@@ -358,6 +364,16 @@ def edit_session(request, session_id):
         return render(request, "hod_template/edit_session_template.html", context)
 
 
+def admin_view_attendance(request):
+    subjects = Subject.objects.all()
+    sessions = Session.objects.all()
+    context = {
+        'subjects': subjects,
+        'sessions': sessions,
+        'page_title': 'Посещения'
+    }
+    return render(request, "hod_template/admin_view_attendance.html", context)
+
 @csrf_exempt
 def check_email_availability(request):
     email = request.POST.get("email")
@@ -443,3 +459,27 @@ def delete_session(request, session_id):
         messages.error(
             request, "TНельзя удалить дату, на которую записаны студенты.")
     return redirect(reverse('manage_session'))
+
+
+@csrf_exempt
+def get_admin_attendance(request):
+    subject_id = request.POST.get('subject')
+    session_id = request.POST.get('session')
+    attendance_date_id = request.POST.get('attendance_date_id')
+    try:
+        subject = get_object_or_404(Subject, id=subject_id)
+        session = get_object_or_404(Session, id=session_id)
+        attendance = get_object_or_404(
+            Attendance, id=attendance_date_id, session=session)
+        attendance_reports = AttendanceReport.objects.filter(
+            attendance=attendance)
+        json_data = []
+        for report in attendance_reports:
+            data = {
+                "status":  str(report.status),
+                "name": str(report.student)
+            }
+            json_data.append(data)
+        return JsonResponse(json.dumps(json_data), safe=False)
+    except Exception as e:
+        return None

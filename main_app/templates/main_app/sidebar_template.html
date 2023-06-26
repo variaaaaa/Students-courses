@@ -11,7 +11,7 @@
                     {% url 'admin_home' as admin_home %}
                     <a href="{{admin_home}}" class="nav-link {% if admin_home == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>На главную </p>
+                        <p>Главная </p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -100,7 +100,17 @@
                     <i class="nav-icon fas fa-th"></i>
                     <p>Длительность курсов</p>
                 </a>
-        </li>
+            </li>
+            <li class="nav-item">
+                    {% url 'admin_view_attendance' as admin_view_attendance %}
+                    <li class="nav-item">
+                        <a href="{{admin_view_attendance}}" class="nav-link  {% if admin_view_attendance == request.path %} active {% endif %}">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Посещения
+                            </p>
+                        </a>
+                    </li>
 {% elif request.user.user_type == '2' %}
     <a href="#" class="brand-link">
         <span class="brand-text font-weight-light">Преподаватель</span>
@@ -126,6 +136,42 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    {% url 'staff_add_result' as staff_add_result %}
+                    <a href="{{staff_add_result}}" class="nav-link {% if staff_add_result == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Добавить оценки
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'edit_student_result' as edit_student_result %}
+                    <a href="{{edit_student_result}}" class="nav-link {% if edit_student_result == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Результаты
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'staff_take_attendance' as staff_take_attendance %}
+                    <a href="{{staff_take_attendance}}" class="nav-link {% if staff_take_attendance == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Отметить посещения
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'staff_update_attendance' as staff_update_attendance %}
+                    <a href="{{staff_update_attendance}}" class="nav-link {% if staff_update_attendance == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Посещения
+                        </p>
+                    </a>
+                </li>
 
 {% else %}
     <a href="" class="brand-link">
@@ -147,6 +193,13 @@
                     <a href="{{student_view_profile}}" class="nav-link {% if student_view_profile == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
                         <p>Профиль</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    {% url 'student_view_attendance' as student_view_attendance %}
+                    <a href="{{student_view_attendance}}" class="nav-link {% if student_view_attendance == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Мои посещения</p>
                     </a>
                 </li>
 {% endif %}

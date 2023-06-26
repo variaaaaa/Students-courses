@@ -21,7 +21,7 @@ def student_home(request):
     if total_attendance == 0:
         percent_absent = percent_present = 0
     else:
-        percent_present = math.floor((total_present/total_attendance) * 100)
+        percent_present = math.floor((total_present / total_attendance) * 100)
         percent_absent = math.ceil(100 - percent_present)
     subject_name = []
     data_present = []
@@ -124,13 +124,11 @@ def student_view_profile(request):
     return render(request, "student_template/student_view_profile.html", context)
 
 
-@csrf_exempt
-def student_fcmtoken(request):
-    token = request.POST.get('token')
-    student_user = get_object_or_404(CustomUser, id=request.user.id)
-    try:
-        student_user.fcm_token = token
-        student_user.save()
-        return HttpResponse("True")
-    except Exception as e:
-        return HttpResponse("False")
+def student_view_result(request):
+    student = get_object_or_404(Student, admin=request.user)
+    results = StudentResult.objects.filter(student=student)
+    context = {
+        'results': results,
+        'page_title': "Результаты"
+    }
+    return render(request, "student_template/student_view_result.html", context)
