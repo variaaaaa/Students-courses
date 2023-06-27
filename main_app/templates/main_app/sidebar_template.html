@@ -5,6 +5,18 @@
         <span class="brand-text font-weight-light">Административная панель</span>
     </a>
     <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                {% if request.user.profile_pic == ""  %}
+                    <img class="img img-fluid mb-2" height="100" width="100" href="C:\Users\1\PycharmProjects\Students_course\no_photo.jpg" alt="">
+                {% else %}
+                    <img class="img img-fluid mb-2" height="100" width="100" src="{{request.user.profile_pic}}" alt="">
+                {% endif %}
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">{{user}}</a>
+            </div>
+        </div>
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
@@ -117,8 +129,20 @@
 
 {% elif request.user.user_type == '2' %}
     <a href="#" class="brand-link">
-        <span class="brand-text font-weight-light">Преподаватель</span>
+        <span class="brand-text font-weight-light"> Преподаватель </span>
     </a>
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                {% if request.user.profile_pic == ""  %}
+                    <img class="img img-fluid mb-2" height="100" width="100" href="C:\Users\1\PycharmProjects\Students_course\no_photo.jpg" alt="">
+                {% else %}
+                    <img class="img img-fluid mb-2" height="100" width="100" src="{{request.user.profile_pic}}" alt="">
+                {% endif %}
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">{{user}}</a>
+            </div>
+        </div>
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -181,16 +205,19 @@
     <a href="" class="brand-link">
         <span class="brand-text font-weight-light"> Ученик </span>
     </a>
-    <div class="sidebar">
-         <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ request.user.profile_pic}}" class="img-circle elevation-2" alt="User Image">
+                {% if request.user.profile_pic == None  %}
+                    <img class="img img-fluid mb-2" height="100" width="100" href="C:\Users\1\PycharmProjects\Students_course\no_photo.jpg" alt="">
+                {% else %}
+                    <img class="img img-fluid mb-2" height="100" width="100" src="{{request.user.profile_pic}}" alt="">
+                {% endif %}
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{user}}</a>
             </div>
         </div>
+    <div class="sidebar">
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">

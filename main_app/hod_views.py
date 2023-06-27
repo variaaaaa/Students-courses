@@ -211,7 +211,7 @@ def edit_staff(request, staff_id):
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
                 user.email = email
-                if password != None:
+                if password and password.strip():
                     user.set_password(password)
                 if passport != None:
                     fs = FileSystemStorage()
@@ -231,10 +231,7 @@ def edit_staff(request, staff_id):
                 messages.error(request, "Произошла ошибка " + str(e))
         else:
             messages.error(request, "Заполните поля корректно.")
-    else:
-        user = CustomUser.objects.get(id=staff_id)
-        staff = Staff.objects.get(id=user.id)
-        return render(request, "hod_template/edit_staff_template.html", context)
+    return render(request, "hod_template/edit_staff_template.html", context)
 
 
 def edit_student(request, student_id):
