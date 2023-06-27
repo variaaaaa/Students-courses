@@ -4,7 +4,8 @@ from django.contrib.auth.models import UserManager
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.db import models
+from django.contrib.auth.models import User
 
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -117,6 +118,10 @@ class StudentResult(models.Model):
     exam = models.FloatField(default=0,  verbose_name='Экзамен')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class CourseEnrollment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Ученик')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
 
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):

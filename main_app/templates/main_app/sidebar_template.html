@@ -182,6 +182,16 @@
         <span class="brand-text font-weight-light"> Ученик </span>
     </a>
     <div class="sidebar">
+         <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="{{ request.user.profile_pic}}" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">{{user}}</a>
+            </div>
+        </div>
+
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
@@ -203,9 +213,27 @@
                     {% url 'student_view_attendance' as student_view_attendance %}
                     <a href="{{student_view_attendance}}" class="nav-link {% if student_view_attendance == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Мои посещения</p>
+                        <p>Мои посещения </p>
                     </a>
                 </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    {% url 'manage_subject' as manage_subject %}
+                    {% url 'edit_subject' subject_id as edit_subject %}
+                    <a href="{{manage_subject}}"
+                        class="nav-link  {% if edit_subject == request.path or manage_subject == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Мое расписание </p>
+                    </a>
+                </li>
+                {% for enrollment in user.courseenrollment_set.all %}
+                    <li>
+                        <a href="{% url 'course_detail' enrollment.course.pk %}">
+                            {{ enrollment.course.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+{% endif %}
 {% endif %}
 <li class="nav-item">
     <a href="{% url 'user_logout' %}" onclick="return confirm('Ваша сессия будет закончена. Продолжить?')" class="nav-link">
@@ -216,4 +244,5 @@
 </ul>
 </nav>
 </div>
+    </div>
 </aside>
