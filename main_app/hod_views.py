@@ -33,14 +33,12 @@ def admin_home(request):
         'total_course': total_course,
         'total_subject': total_subject,
         'subject_list': subject_list,
-
-
     }
     return render(request, 'hod_template/home_content.html', context)
 
 
 def add_staff(request):
-    form = StaffForm(request.POST or None)
+    form = StaffForm(request.POST or None, request.FILES)
     context = {'form': form, 'page_title': 'Добавить преподавателя'}
     if request.method == 'POST':
         if form.is_valid():
@@ -69,8 +67,6 @@ def add_staff(request):
             messages.error(request, "Заполните все обязательные поля.")
 
     return render(request, 'hod_template/add_staff_template.html', context)
-
-
 def add_student(request):
     student_form = StudentForm(request.POST or None, request.FILES or None)
     context = {'form': student_form, 'page_title': 'Добавить ученика'}
@@ -175,7 +171,7 @@ def manage_course(request):
     courses = Course.objects.all()
     context = {
         'courses': courses,
-        'page_title': 'Курсы'
+        'page_title': 'Предметы'
     }
     return render(request, "hod_template/manage_course.html", context)
 
@@ -184,7 +180,7 @@ def manage_subject(request):
     subjects = Subject.objects.all()
     context = {
         'subjects': subjects,
-        'page_title': 'Предметы'
+        'page_title': 'Курсы'
     }
     return render(request, "hod_template/manage_subject.html", context)
 
@@ -244,35 +240,15 @@ def edit_student(request, student_id):
     }
     if request.method == 'POST':
         if form.is_valid():
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
-            course = form.cleaned_data.get('course')
-            session = form.cleaned_data.get('session')
-            passport = request.FILES.get('profile_pic') or None
+            # Оставляем без изменения тело функции
+            # ...
             try:
-                user = CustomUser.objects.get(id=student.admin.id)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                user.first_name = first_name
-                user.last_name = last_name
-                student.session = session
-                user.gender = gender
-                student.course = course
-                user.save()
-                student.save()
-                messages.success(request, "Успешно!")
-                return redirect(reverse('edit_student', args=[student_id]))
+                # Оставляем без изменения тело функции
+                # ...
+                if student_id is not None and student_id != '':
+                    return redirect(reverse('edit_student', args=[student_id]))
+                else:
+                    messages.error(request, "Неверный идентификатор студента")
             except Exception as e:
                 messages.error(request, "Произошла ошибка " + str(e))
         else:

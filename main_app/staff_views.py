@@ -188,7 +188,6 @@ def staff_add_result(request):
         try:
             student_id = request.POST.get('student_list')
             subject_id = request.POST.get('subject')
-            test = request.POST.get('test')
             exam = request.POST.get('exam')
             student = get_object_or_404(Student, id=student_id)
             subject = get_object_or_404(Subject, id=subject_id)
@@ -196,13 +195,12 @@ def staff_add_result(request):
                 data = StudentResult.objects.get(
                     student=student, subject=subject)
                 data.exam = exam
-                data.test = test
                 data.save()
                 messages.success(request, "Баллы изменены!")
             except:
-                result = StudentResult(student=student, subject=subject, test=test, exam=exam)
+                result = StudentResult(student=student, subject=subject, exam=exam)
                 result.save()
-                messages.success(request, "Scores Saved")
+                messages.success(request, "Баллы сохранены.")
         except Exception as e:
             messages.warning(request, "Ошибка загрузки данных.")
     return render(request, "staff_template/staff_add_result.html", context)
@@ -221,4 +219,4 @@ def fetch_student_result(request):
         }
         return HttpResponse(json.dumps(result_data))
     except Exception as e:
-        return HttpResponse('False')
+        return HttpResponse('Ошибка')
