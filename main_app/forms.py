@@ -13,10 +13,10 @@ class FormSettings(forms.ModelForm):
 
 class CustomUserForm(FormSettings):
     email = forms.EmailField(required=True)
-    gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')])
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
-    password = forms.CharField(widget=forms.PasswordInput)
+    gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')], label='Пол')
+    first_name = forms.CharField(required=True, label='Имя')
+    last_name = forms.CharField(required=True, label='Фамилия')
+    password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
     widget = {
         'password': forms.PasswordInput(),
     }
