@@ -201,7 +201,6 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
@@ -222,7 +221,7 @@ def edit_staff(request, staff_id):
                 user.first_name = first_name
                 user.last_name = last_name
                 user.gender = gender
-                user.address = address
+
                 staff.course = course
                 user.save()
                 staff.save()
@@ -250,7 +249,6 @@ def edit_student(request, student_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
@@ -273,7 +271,6 @@ def edit_student(request, student_id):
                 user.last_name = last_name
                 student.session = session
                 user.gender = gender
-                user.address = address
                 student.course = course
                 user.save()
                 student.save()

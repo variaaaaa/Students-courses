@@ -146,14 +146,12 @@ def staff_view_profile(request):
                 first_name = form.cleaned_data.get('first_name')
                 last_name = form.cleaned_data.get('last_name')
                 password = form.cleaned_data.get('password') or None
-                address = form.cleaned_data.get('address')
                 gender = form.cleaned_data.get('gender')
                 admin = staff.admin
                 if password != None:
                     admin.set_password(password)
                 admin.first_name = first_name
                 admin.last_name = last_name
-                admin.address = address
                 admin.gender = gender
                 admin.save()
                 staff.save()
