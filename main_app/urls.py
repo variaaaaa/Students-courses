@@ -46,22 +46,13 @@ urlpatterns = [
     path("staff/edit/<int:staff_id>", hod_views.edit_staff, name='edit_staff'),
     path("staff/delete/<int:staff_id>",
          hod_views.delete_staff, name='delete_staff'),
-    path("course/delete/<int:course_id>",
-         hod_views.delete_course, name='delete_course'),
-    path("subject/delete/<int:subject_id>",
-         hod_views.delete_subject, name='delete_subject'),
-
-    path("session/delete/<int:session_id>",
-         hod_views.delete_session, name='delete_session'),
-
-    path("student/delete/<int:student_id>",
-         hod_views.delete_student, name='delete_student'),
-    path("student/edit/<int:student_id>",
-         hod_views.edit_student, name='edit_student'),
-    path("course/edit/<int:course_id>",
-         hod_views.edit_course, name='edit_course'),
-    path("subject/edit/<int:subject_id>",
-         hod_views.edit_subject, name='edit_subject'),
+    path("course/delete/<int:course_id>", hod_views.delete_course, name='delete_course'),
+    path("subject/delete/<int:subject_id>", hod_views.delete_subject, name='delete_subject'),
+    path("session/delete/<int:session_id>", hod_views.delete_session, name='delete_session'),
+    path("student/delete/<int:student_id>", hod_views.delete_student, name='delete_student'),
+    path("student/edit/<int:student_id>", hod_views.edit_student, name='edit_student'),
+    path("course/edit/<int:course_id>", hod_views.edit_course, name='edit_course'),
+    path("subject/edit/<int:subject_id>", hod_views.edit_subject, name='edit_subject'),
 
 
     # Staff

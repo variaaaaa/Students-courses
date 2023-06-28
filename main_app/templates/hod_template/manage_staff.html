@@ -29,15 +29,14 @@
                                 {% for staff in allStaff %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{staff.last_name}}, {{staff.first_name}}</td>
+                                    <td>{{staff.last_name}} {{staff.first_name}}</td>
                                     <td>{{staff.email}}</td>
                                     <td>{{staff.gender}}</td>
                                     <td>{{staff.staff.course.name}}</td>
                                      <td>
                                         {% if staff.profile_pic == ""  %}
                                             <img class="img img-fluid mb-2" height="100" width="100"
-                                           href="C:\Users\1\PycharmProjects\Students_course\no_photo.jpg" alt="">
-
+                                           href="no_photo.jpg" alt="">
                                         {% else %}
                                         <img class="img img-fluid mb-2" height="100" width="100"
                                             src="{{staff.profile_pic}}" alt="">
