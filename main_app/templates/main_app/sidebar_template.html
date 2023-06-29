@@ -44,9 +44,8 @@
                 </li>
                 <li class="nav-item">
                     {% url 'manage_student' as manage_student %}
-                    {% url 'edit_student' student_id as edit_student %}
-                    <a href="{{manage_student}}"
-                        class="nav-link  {% if edit_student == request.path or manage_student == request.path %} active {% endif %}">
+                    {% url 'edit_student' student.id as edit_student %}
+                    <a href="{{manage_student}}" class="nav-link {% if edit_student == request.path or manage_student == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
                         <p>Ученики </p>
                     </a>
@@ -245,12 +244,20 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
+                    {% url 'student_manage_subject' as manage_subject %}
+                    <a href="{{manage_subject}}"
+                        class="nav-link  ">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Мое расписание </p>
+                    </a>
+                </li>
+                    <li class="nav-item">
                     {% url 'manage_subject' as manage_subject %}
                     {% url 'edit_subject' subject_id as edit_subject %}
                     <a href="{{manage_subject}}"
                         class="nav-link  {% if edit_subject == request.path or manage_subject == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Мое расписание </p>
+                        <p>Курсы</p>
                     </a>
                 </li>
                 {% for enrollment in user.courseenrollment_set.all %}

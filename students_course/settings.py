@@ -15,11 +15,10 @@ from pathlib import Path
 
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'Mysecretkey'  # Consider using your secret key
+SECRET_KEY = 'Mysecretkey'
 
 DEBUG = True
 ALLOWED_HOSTS = []

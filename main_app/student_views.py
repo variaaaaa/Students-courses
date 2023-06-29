@@ -130,3 +130,13 @@ def student_view_result(request):
         'page_title': "Результаты"
     }
     return render(request, "student_template/student_view_result.html", context)
+
+
+def manage_subject(request):
+    subjects = Subject.objects.all()
+    context = {
+        'subjects': subjects,
+        'page_title': 'Курсы'
+    }
+    return render(request, "student_template/student_manage_subjects.html", context)
+

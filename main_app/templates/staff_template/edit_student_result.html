@@ -9,20 +9,18 @@
             <div class="col-md-12">
                     <form method="POST">
                         {% csrf_token %}
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">{{page_title}}</h3>
-                        </div>
-                        <div class="card-body">
-                            {{ form }}
-                        </div>
-
-                        <div class="card-footer">
-                            <button type="submit" id='update_result' class="btn btn-primary btn-block">Обновить</button>
-                        </div>
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    </form>
+                    <div class="card-body">
+                        {{ form }}
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" id='update_result' class="btn btn-primary btn-block">Обновить результат</button>
+                    </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -42,10 +40,7 @@
    $("#id_student").change(function () {
     fetch_student_result();
                 });
-                $("#id_exam").hide()
-                $("#id_test").hide()
-                $("#update_result").hide()
-                $('label[for="id_exam"]').hide();
+
         function fetchStudents(){
             var subject = $("#id_subject").val()
             var session = $("#id_session_year").val()
@@ -65,15 +60,16 @@
                 if (json_data.length < 1) {
                     alert("Нет информации.")
                 } else {
-                    var div_data = "<option>Выберите студента</option>"
+                    var div_data = "<option>Select Student</option>"
 
                     for (key in json_data) {
                         div_data += "<option value='" + json_data[key]['id'] + "'>" + json_data[key]['name'] + " </option>"
                     }
+
                     $("#id_student").html(div_data)
                 }
             }).fail(function (response) {
-                alert("Ошибка при загрузке данных")
+                alert("Ошибка.")
             })
                }
 
@@ -82,10 +78,7 @@
                 var subject = $("#id_subject").val()
                 $("#id_test").val(null)
                 $("#id_exam").val(null)
-                $("#id_exam").hide()
-                $("#update_result").hide()
-                $("#id_test").hide()
-                $('label[for="id_exam"]').hide();
+
                 if (student.length  == 0 || subject.length == 0 || student < 1 || subject < 1){
                     return false;
                 }
@@ -104,13 +97,16 @@
 
                             $("#id_exam").val(json_data['exam'])
                             $("#id_exam").show()
+                            $("#id_test").show()
                             $("#update_result").show()
                             $('label[for="id_exam"]').show();
+
                     }
                 }).fail(function (response) {
-                    alert("Ошибка при загрузке данных.")
+                    alert("Ошибка")
                 })
                }
+
     })
 </script>
 {% endblock custom_js %}

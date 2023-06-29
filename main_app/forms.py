@@ -13,7 +13,7 @@ class FormSettings(forms.ModelForm):
 
 class CustomUserForm(FormSettings):
     email = forms.EmailField(required=True)
-    gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')], label='Пол')
+    gender = forms.ChoiceField(choices=[('М', 'Мужской'), ('Ж', 'Женский')], label='Пол')
     first_name = forms.CharField(required=True, label='Имя')
     last_name = forms.CharField(required=True, label='Фамилия')
     address = forms.CharField(widget=forms.Textarea, label='Адрес')

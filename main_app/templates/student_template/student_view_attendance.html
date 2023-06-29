@@ -61,7 +61,6 @@
                             </div>
                             <button type="button" id="fetch_attendance" class="btn btn-primary btn-block">Получить отчет</button>
                </div>
-
                     </div>
                     <div class="card-footer">
 
@@ -73,13 +72,9 @@
     </div>
 </section>
 {% endblock content %}
-
-
 {% block custom_js %}
 <script>
     $(document).ready(function () {
-
-
         $("#fetch_attendance").click(function () {
             var subject = $("#subject").val()
             var start_date = $("#start_date").val()

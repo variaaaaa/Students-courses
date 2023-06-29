@@ -34,7 +34,7 @@ class Session(models.Model):
     end_year = models.DateField(verbose_name='Конец курса')
 
     def __str__(self):
-        return "From " + str(self.start_year) + " to " + str(self.end_year)
+        return "С " + str(self.start_year) + " до " + str(self.end_year)
 
 
 class CustomUser(AbstractUser):

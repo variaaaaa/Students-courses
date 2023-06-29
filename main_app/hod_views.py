@@ -159,13 +159,20 @@ def manage_staff(request):
 
 
 def manage_student(request):
-    students = CustomUser.objects.filter(user_type=3)
+    students = CustomUser.objects.filter(user_type=2)
     context = {
         'students': students,
         'page_title': 'Ученики'
     }
-    return render(request, "hod_template/manage_student.html", context)
 
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        if student_id:
+            return redirect(reverse('edit_student', args=[student_id]))
+        else:
+            messages.error(request, "Ошибка: некорректный идентификатор ученика")
+
+    return render(request, "hod_template/manage_student.html", context)
 
 def manage_course(request):
     courses = Course.objects.all()
@@ -240,11 +247,7 @@ def edit_student(request, student_id):
     }
     if request.method == 'POST':
         if form.is_valid():
-            # Оставляем без изменения тело функции
-            # ...
             try:
-                # Оставляем без изменения тело функции
-                # ...
                 if student_id is not None and student_id != '':
                     return redirect(reverse('edit_student', args=[student_id]))
                 else:
@@ -419,13 +422,11 @@ def delete_staff(request, staff_id):
     messages.success(request, "Преподаватель успешно удален")
     return redirect(reverse('manage_staff'))
 
-
 def delete_student(request, student_id):
     student = get_object_or_404(CustomUser, student__id=student_id)
     student.delete()
     messages.success(request, "Ученик успешно удален")
     return redirect(reverse('manage_student'))
-
 
 def delete_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)

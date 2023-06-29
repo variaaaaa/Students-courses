@@ -9,35 +9,37 @@
                 <div class="small-box bg-info">
                     <div class="inner">
                         <h3>{{total_attendance}}</h3>
-                        <p>Всего посещений</p>
+                        <p>Всего посещений </p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-bag"></i>
-                    </div></div>
+                    </div>
+                   </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
                         <h3>{{ percent_present }}<sup style="font-size: 20px">%</sup></h3>
-                        <p>Количество посещений</p>
+                        <p>посещений</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person-add"></i>
-                    </div> </div>
+                    </div>
+
+                </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
                         <h3>{{percent_absent}}<sup style="font-size: 20px">%</sup></h3>
-                        <p>Количество пропусков</p>
+                        <p> отсутствий</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
-                    </div></div>
+                    </div>
+                   </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-6">
-                <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
                         <h3>{{total_subject}}</h3>
@@ -45,16 +47,15 @@
                     </div>
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
-                    </div></div>
+                    </div>
+                </div>
             </div>
-            <!-- ./col -->
         </div>
         <div class="row">
             <div class="col-lg-6">
                         <div class="card card-secondary">
                           <div class="card-header">
                             <h3 class="card-title">{{page_title}}</h3>
-
                             <div class="card-tools">
                               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                               </button>
@@ -68,10 +69,10 @@
             </div>
 
             <div class="col-lg-6">
-
                         <div class="card card-secondary">
                           <div class="card-header">
                             <h3 class="card-title">{{page_title}}</h3>
+
                             <div class="card-tools">
                               <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                               </button>
@@ -93,14 +94,14 @@
 {% block custom_js %}
   <script>
 $(document).ready(function(){
+
     var subjects = {{data_name|safe}}
     var data_present = {{data_present}}
     var data_absent = {{data_absent}}
-
     var attendanceDataCanvas = $('#attendanceData').get(0).getContext('2d')
     var donutData        = {
       labels: [
-         'Present', 'Absent'
+         'Посещения', 'Отсутствия'
       ],
       datasets: [
         {
@@ -124,7 +125,7 @@ var areaChartData = {
     labels  : subjects,
     datasets: [
     {
-        label               : 'Посещений',
+        label               : 'Посещения',
         backgroundColor     : 'rgba(60,141,188,0.9)',
         borderColor         : 'rgba(60,141,188,0.8)',
         pointRadius          : false,
@@ -136,7 +137,7 @@ var areaChartData = {
       },
 
       {
-        label               : 'Отсутствий',
+        label               : 'Отсутствия',
         backgroundColor     : 'rgba(210, 214, 222, 1)',
         borderColor         : 'rgba(210, 214, 222, 1)',
         pointRadius         : false,
@@ -166,5 +167,5 @@ var barChart = new Chart(barChartCanvas, {
 
 
 })
-
-{% endblock custom_js %}
+  </script>
+{% endblock %}
