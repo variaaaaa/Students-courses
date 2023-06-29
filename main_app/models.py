@@ -76,7 +76,7 @@ class Student(models.Model):
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, null=True, verbose_name='Длительность курса')
 
     def __str__(self):
-        return self.admin.last_name + ", " + self.admin.first_name
+        return self.admin.last_name + " " + self.admin.first_name
 
 
 class Staff(models.Model):

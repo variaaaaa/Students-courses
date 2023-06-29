@@ -22,14 +22,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               {% for subject in subjects %}
+                               {% for subject in subjects reversed %}
                                 <tr>
                                     <td>{{subject.name}}</td>
                                     <td>{{subject.staff.admin}}</td>
                                     <td>{{subject.course.name}}</td>
-                                   <td> 06/06/23 - 06/07/23</td>
+                                   <td> 01.06.23 - 01.07.23</td>
                                 </tr>
-                            {% endfor %}
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

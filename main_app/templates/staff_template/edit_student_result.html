@@ -17,10 +17,11 @@
                         {{ form }}
                     </div>
                     <div class="card-footer">
-                        <button type="submit" id='update_result' class="btn btn-primary btn-block">Обновить результат</button>
+                        <button type="submit" id='update_result' class="btn btn-primary btn-block">Изменить оценку</button>
                     </div>
+                    </div>
+                    </form>
                 </div>
-                </form>
             </div>
         </div>
     </div>
@@ -58,9 +59,9 @@
             }).done(function (response) {
                 var json_data = JSON.parse(response)
                 if (json_data.length < 1) {
-                    alert("Нет информации.")
+                    alert("Нет данных")
                 } else {
-                    var div_data = "<option>Select Student</option>"
+                    var div_data = "<option>Выбрать ученика</option>"
 
                     for (key in json_data) {
                         div_data += "<option value='" + json_data[key]['id'] + "'>" + json_data[key]['name'] + " </option>"
@@ -69,16 +70,13 @@
                     $("#id_student").html(div_data)
                 }
             }).fail(function (response) {
-                alert("Ошибка.")
+                alert("Ошибка")
             })
                }
-
                function fetch_student_result(){
                 var student = $("#id_student").val()
                 var subject = $("#id_subject").val()
-                $("#id_test").val(null)
                 $("#id_exam").val(null)
-
                 if (student.length  == 0 || subject.length == 0 || student < 1 || subject < 1){
                     return false;
                 }
@@ -91,19 +89,18 @@
                     }
                 }).done(function (response) {
                     if (response == 'False') {
-                        alert("Нет данных.")
+                        alert("Нет данных")
                     } else {
                         var json_data = JSON.parse(response)
 
                             $("#id_exam").val(json_data['exam'])
                             $("#id_exam").show()
-                            $("#id_test").show()
                             $("#update_result").show()
                             $('label[for="id_exam"]').show();
 
                     }
                 }).fail(function (response) {
-                    alert("Ошибка")
+                    alert("Ошибка.")
                 })
                }
 

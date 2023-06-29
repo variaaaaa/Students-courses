@@ -47,7 +47,6 @@
                 <div class="card card-secondary">
                   <div class="card-header">
                     <h3 class="card-title">{{page_title}}</h3>
-
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
                       </button>
@@ -86,7 +85,7 @@
   <script>
       $(document).ready(function(){
         var donutData        = {
-            labels: ['Были', 'Не были'],
+            labels: ['Посещения'],
             datasets: [
               {
                 data:[{{total_attendance}}, {{total_leave}}],

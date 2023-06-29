@@ -82,6 +82,7 @@
             </div>
         </div>
     </div>
+    </div>
 </section>
 {% endblock content %}
 
@@ -169,10 +170,10 @@ if (attendance_date.length  == 0){
 
                     for (key in json_data) {
                             if (json_data[key]['status'] == 'True'){
-                                div_data += "<div class='col-lg-3 attendance_div_green'><b>"+ json_data[key]['name'] + "</b><br/>Был(а)</div>"
+                                div_data += "<div class='col-lg-3 attendance_div_green'><b>"+ json_data[key]['name'] + "</b><br/>Был</div>"
                             }else{
 
-                                div_data += "<div class='col-lg-3 attendance_div_red'><b>"+ json_data[key]['name'] + "</b><br/>Не был(а)</div>"
+                                div_data += "<div class='col-lg-3 attendance_div_red'><b>"+ json_data[key]['name'] + "</b><br/>Не был</div>"
                             }
                         }
                       div_data += "</div></div>"

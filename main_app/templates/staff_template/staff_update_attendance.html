@@ -1,6 +1,30 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.attendance_div_red{
+    padding: 10px;
+    background: #f44336;
+    border: 3px solid white;
+    text-align: center;
+    color: #fff;
+    border-radius: 30px;
+    box-shadow: 1px 1px 1px grey;
+    margin: 5px;
+}
+.attendance_div_green{
+    padding: 10px;
+    background: #4CAF50;
+    border: 3px solid white;
+    text-align: center;
+    color: #fff;
+    border-radius: 30px;
+    box-shadow: 1px 1px 1px grey;
+    margin: 5px;
+}
+</style>
+{% endblock custom_css %}
 {% block content %}
 
 <section class="content">
@@ -22,7 +46,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Даты</label>
+                            <label>Длительность курса</label>
                             <select name="session" class="form-control" id='session'>
                                 <option value="">----</option>
                                 {% for session in sessions  %}
@@ -32,31 +56,36 @@
                         </div>
                         <div class="form-group"><div  style="display: none;" class="alert alert-danger" id='error_attendance'></div>
                                 <div class="alert alert-success" id='success_attendance' style="display: none;"></div>
-                             <button type="button" id='fetch_attendance' class="btn btn-primary btn-block"> Редактировать посещения</button>
+                             <button type="button" id='fetch_attendance' class="btn btn-primary btn-block"> Отчет по посещениям</button>
                         </div>
                             <div class="form-group" style="display: none;" id="attendance_block">
                             <div class="form-group">
                                 <label>Даты посещений</label>
                                 <select name="attendance_date" id='attendance_date' class="form-control">
+
                                 </select>
                             </div>
                             <div class="form-group">
 
                             <div id="fetch_student_block" style="display: none;">
-                                <button type="button" id='fetch_student' class="btn btn-primary btn-block">Показать</button>
+                                <button type="button" id='fetch_student' class="btn btn-primary btn-block">Показать информацию</button>
+
 
                             </div>
                             <div id='student_data' class="card-footer">
-                            </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+    </div>
 </section>
 {% endblock content %}
+
 
 {% block custom_js %}
 <script>
@@ -64,8 +93,10 @@
         $("#fetch_attendance").click(function(){
             var subject = $("#subject").val()
             var session = $("#session").val()
+            $("#student_data").html("")
+
             if (session.length < 1 || subject.length < 1){
-                $("#error_attendance").html("ВЫберите даты и предмет.")
+                $("#error_attendance").html("Выберите и дату, и предмет :)")
                 $("#attendance_block").hide()
                 $("#error_attendance").show()
                 return false
@@ -94,90 +125,63 @@
                     $("#attendance_block").show()
                     $("#fetch_student_block").show()
                 }else{
-                    $("#error_attendance").html("Информация о данной дате отсутствует.")
+                    $("#error_attendance").html("На эту дату нет информации о посещениях.")
                     $("#error_attendance").show()
                     $("#attendance_date").html("")
                     $("#attendance_block").hide()
-
-
+                    $("#student_data").html("")
                 }
             }).fail(function(response){
-                alert("Ошибка.")
+                alert("Ошибка загрузки данных.")
                 $("#error_attendance").html("")
                 $("#error_attendance").show()
                 $("#attendance_block").hide()
+                $("#student_data").html("")
             })
         })
 
         $("#fetch_student").click(function () {
             var attendance_date = $("#attendance_date").val()
+            var session = $("#session").val()
+            var subject = $("#subject").val()
             $("#student_data").html(null)
 if (attendance_date.length  == 0){
-    alert("Please Choose A Date");
+    alert("Выберите дату.");
     $("#save_attendance").hide()
 
     return false;
+}
             $.ajax({
-                url: "{% url 'get_student_attendance' %}",
+                url: "{% url 'get_admin_attendance' %}",
                 type: 'POST',
                 data: {
                     attendance_date_id:attendance_date,
+                    session:session,
+                    subject:subject
                 }
             }).done(function (response) {
                 var json_data = JSON.parse(response)
                 if (json_data.length < 1) {
-                    alert("Нет информации.")
-            $("#save_attendance").hide()
+                    alert("Нет информации")
 
                 } else {
-            $("#save_attendance").show()
-                    var div_data = "<hr/><div class='form-group'></div><div class='form-group'> <label>Student Attendance</label><div class='row'>"
+
+                    var div_data = "<hr/><div class='form-group'></div><div class='form-group'> <label>Посещения</label><div class='row'>"
 
                     for (key in json_data) {
-                        div_data += "<div class='col-lg-3'><div class='form-check custom-control custom-checkbox'><input type='checkbox' class='custom-control-input' " + (json_data[key]['status'] ? "checked='checked'" : "")+" name='student_data[]' value=" + json_data[key]['id'] + " id='checkbox" + json_data[key]['id'] + "' /> <label for='checkbox" + json_data[key]['id'] + "' class='custom-control-label'>" + json_data[key]['name']  + (json_data[key]['status'] ? " [Был] " : " [Не был] ")+"</label></div> </div>"
-                    }
-                    div_data += "</div></div>"
-                    div_data += "<div class='form-group'><button id='save_attendance' class='btn btn-success' type='button'>Сохранить</button></div>"
+                            if (json_data[key]['status'] == 'True'){
+                                div_data += "<div class='col-lg-3 attendance_div_green'><b>"+ json_data[key]['name'] + "</b><br/>Был</div>"
+                            }else{
+
+                                div_data += "<div class='col-lg-3 attendance_div_red'><b>"+ json_data[key]['name'] + "</b><br/>Не был</div>"
+                            }
+                        }
+                      div_data += "</div></div>"
                     $("#student_data").html(div_data)
                 }
             }).fail(function (response) {
-                alert("Error in fetching students")
+                alert("Ошибка при загрузке данных.")
             })
-
-        })
-        $(document).on('click', '#save_attendance', function () {
-            //$(this).attr("disabled","disabled")
-            $(this).text("Updating Attendance Data...")
-            var student_data = $("input[name='student_data[]']").map(function () {
-                if ($(this).is(":checked")){
-                return {'id':$(this).val(), 'status': 1};
-
-                }
-                return {'id':$(this).val(), 'status': 0};
-
-            }).get()
-
-            student_data = JSON.stringify(student_data)
-            var attendance_date = $("#attendance_date").val()
-            $.ajax({
-                url: "{% url 'update_attendance' %}",
-                type: 'POST',
-                data: {
-                    date: attendance_date,
-                    student_ids: student_data,
-                }
-            }).done(function (response) {
-                if (response == 'OK'){
-                    alert("Updated")
-                }else{
-                    alert("Error. Please try again")
-                }
-                location.reload()
-
-            }).fail(function (response) {
-                alert("Error in saving attendance")
-            })
-
         })
     })
 </script>

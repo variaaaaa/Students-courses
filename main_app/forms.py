@@ -46,7 +46,6 @@ class CustomUserForm(FormSettings):
             if dbEmail != formEmail:
                 if CustomUser.objects.filter(email=formEmail).exists():
                     raise forms.ValidationError("Эта почта уже существует :)")
-
         return formEmail
 
     class Meta:
