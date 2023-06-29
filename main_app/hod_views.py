@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import (HttpResponse, HttpResponseRedirect,
                               get_object_or_404, redirect, render)
+from django.db.models import Q
 from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -159,19 +160,11 @@ def manage_staff(request):
 
 
 def manage_student(request):
-    students = CustomUser.objects.filter(user_type=2)
+    allStudents = CustomUser.objects.filter(~Q(user_type=1) | ~Q(user_type=2))
     context = {
-        'students': students,
+        'students': allStudents,
         'page_title': 'Ученики'
     }
-
-    if request.method == 'POST':
-        student_id = request.POST.get('student_id')
-        if student_id:
-            return redirect(reverse('edit_student', args=[student_id]))
-        else:
-            messages.error(request, "Ошибка: некорректный идентификатор ученика")
-
     return render(request, "hod_template/manage_student.html", context)
 
 def manage_course(request):
