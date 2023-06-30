@@ -1,7 +1,6 @@
 import json
 import math
 from datetime import datetime
-
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse

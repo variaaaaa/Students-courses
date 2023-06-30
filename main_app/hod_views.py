@@ -1,15 +1,11 @@
 import json
-import requests
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import (HttpResponse, HttpResponseRedirect,
                               get_object_or_404, redirect, render)
-from django.db.models import Q
-from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import UpdateView
 
 from .forms import *
 from .models import *
@@ -160,7 +156,7 @@ def manage_staff(request):
 
 
 def manage_student(request):
-    allStudents = CustomUser.objects.filter(~Q(user_type=1) | ~Q(user_type=2))
+    allStudents = CustomUser.objects.all()
     context = {
         'students': allStudents,
         'page_title': 'Ученики'

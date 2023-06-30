@@ -240,7 +240,15 @@
                     <a href="{{manage_subject}}"
                         class="nav-link  ">
                         <i class="nav-icon fas fa-th"></i>
-                        <p>Мое расписание </p>
+                        <p>Моё расписание </p>
+                    </a>
+                </li>
+                    <li class="nav-item">
+                    {% url 'student_view_result' as student_view_result %}
+                    <a href="{{student_view_result}}"
+                        class="nav-link  ">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Мои оценки </p>
                     </a>
                 </li>
 {% endif %}
