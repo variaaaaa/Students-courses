@@ -88,8 +88,8 @@
             labels: ['Посещения'],
             datasets: [
               {
-                data:[{{total_attendance}}, {{total_leave}}],
-                backgroundColor : ['#00a65a', '#f39c12',],
+                data:[{{total_attendance}}],
+                backgroundColor : ['#00a65a'],
               }
             ]
           }
@@ -128,9 +128,7 @@
     }
         var barChartCanvas = $('#barChart').get(0).getContext('2d')
         var temp0 = barChartData.datasets[0]
-        //var temp1 = areaChartData.datasets[1]
         barChartData.datasets[0] = temp0
-       // barChartData.datasets[1] = temp0
 
     var stackedBarChartOptions = {
       responsive              : true,

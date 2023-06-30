@@ -16,14 +16,12 @@
 
                    <table class="table table-bordered">
                        <tr>
-                           <th>ID</th>
                            <th>Предмет</th>
                            <th>Экзамен</th>
                            <th>Оценка</th>
                         </tr>
                         {% for result in results %}
                         <tr>
-                        <td>{{forloop.counter}}</td>
                         <td>{{ result.subject }}</td>
                         <td>{{ result.exam }}</td>
                         {% if result.exam > 80 %}
